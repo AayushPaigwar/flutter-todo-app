@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
+import 'package:supa_base/nextpage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Countries',
+      title: 'TODO App',
       home: HomePage(),
     );
   }
@@ -49,15 +50,48 @@ class _HomePageState extends State<HomePage> {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
-            final countries = snapshot.data!;
-            return ListView.builder(
-              itemCount: countries.length,
-              itemBuilder: ((context, index) {
-                final country = countries[index];
-                return ListTile(
-                  title: Text(country['name']),
-                );
-              }),
+            final todotable = snapshot.data!;
+            return Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(10),
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    decoration: const BoxDecoration(
+                      color: Colors.white60,
+                      // shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: ListView.builder(
+                      itemCount: todotable.length,
+                      itemBuilder: ((context, index) {
+                        final todo = todotable[index];
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Text(todo['name']),
+                              // subtitle: Text(todo['capital']),
+                            ),
+                            const Divider(),
+                          ],
+                        );
+                      }),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => NextPage()),
+                    );
+                  },
+                  child: const Text('Next Page'),
+                )
+              ],
             );
           },
         ),
