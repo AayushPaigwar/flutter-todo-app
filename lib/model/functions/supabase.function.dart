@@ -25,3 +25,8 @@ class SupabaseFunction {
     return response.data as List<Map<String, dynamic>>;
   }
 }
+
+// Error: NoSuchMethodError: Class 'List <dynamic>' has no instance getter 'error'.
+// Receiver: Instance(length:27) of '_GrowableList'
+// Tried calling: error
+

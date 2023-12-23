@@ -1,51 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:supa_base/model/functions/supabase.function.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NextPage extends StatelessWidget {
   final _future = SupabaseFunction();
 
   NextPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cities'),
-      ),
-      body: FutureBuilder(
-        future: _future.getCountries(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final todotable = snapshot.data!;
-
-          return Column(
-            children: [
-              ListView.builder(
-                itemCount: todotable.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(todotable[index]['city']),
-                    subtitle: Text(todotable[index]['name']),
-                  );
-                },
-              ),
-            ],
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddCityDialog(context);
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
   void _showAddCityDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -91,6 +50,61 @@ class NextPage extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cities'),
+      ),
+      body: FutureBuilder(
+        future: _future.getCountries(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || (snapshot.data as List).isEmpty) {
+            return const Center(child: Text('No data available'));
+          } else {
+            final todotable = snapshot.data!;
+
+            return Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  decoration: const BoxDecoration(
+                    color: Colors.white60,
+                    // shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  child: ListView.builder(
+                    itemCount: todotable.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(todotable[index]['city']),
+                        subtitle: Text(todotable[index]['name']),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddCityDialog(context);
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

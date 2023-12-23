@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:supa_base/nextpage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -39,6 +40,8 @@ class _HomePageState extends State<HomePage> {
   final _future = Supabase.instance.client
       .from('countries')
       .select<List<Map<String, dynamic>>>();
+  // final _future = SupabaseFunction();
+
 
   @override
   Widget build(BuildContext context) {
