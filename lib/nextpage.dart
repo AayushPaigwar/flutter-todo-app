@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:supa_base/model/functions/supabase.function.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NextPage extends StatelessWidget {
-  final _future = SupabaseFunction();
+  //Add City
+  final _futureadd = SupabaseFunction();
+
+  //get Countries Data to Screen
+  final _future = Supabase.instance.client
+      .from('countries')
+      .select<List<Map<String, dynamic>>>();
 
   NextPage({super.key});
+
   void _showAddCityDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -14,17 +22,21 @@ class NextPage extends StatelessWidget {
 
         return AlertDialog(
           title: const Text('Add City'),
-          content: Column(
-            children: [
-              TextField(
-                controller: cityController,
-                decoration: const InputDecoration(labelText: 'City Name'),
-              ),
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
-              ),
-            ],
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.2,
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Column(
+              children: [
+                TextField(
+                  controller: cityController,
+                  decoration: const InputDecoration(labelText: 'City Name'),
+                ),
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -35,17 +47,39 @@ class NextPage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                String city = cityController.text.trim();
-                String name = nameController.text.trim();
-                if (city.isNotEmpty && name.isNotEmpty) {
-                  _future.addCity(city, name).then(
-                    (result) {
-                      Navigator.of(context).pop();
-                    },
+                if (cityController.text.isNotEmpty &&
+                    nameController.text.isNotEmpty) {
+                  _futureadd.addCity(cityController.text, nameController.text);
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text(
+                            'Please fill all fields!',
+                            style: TextStyle(fontSize: 17),
+                          ),
+                        ),
+                      ),
+                      duration: const Duration(milliseconds: 1500),
+                      width: 300.0, // Width of the SnackBar.
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 8.0 // Inner padding for SnackBar content.
+                          ),
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                   );
                 }
               },
-              child: const Text('Add'),
+              child: const Text(
+                'Add',
+              ),
             ),
           ],
         );
@@ -59,21 +93,17 @@ class NextPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Cities'),
       ),
-      body: FutureBuilder(
-        future: _future.getCountries(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || (snapshot.data as List).isEmpty) {
-            return const Center(child: Text('No data available'));
-          } else {
-            final todotable = snapshot.data!;
-
-            return Column(
-              children: [
-                Container(
+      body: Column(
+        children: [
+          Expanded(
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: _future,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final todotable = snapshot.data!;
+                return Container(
                   padding: const EdgeInsets.all(10),
                   margin: const EdgeInsets.all(10),
                   height: MediaQuery.of(context).size.height * 0.1,
@@ -86,24 +116,30 @@ class NextPage extends StatelessWidget {
                   ),
                   child: ListView.builder(
                     itemCount: todotable.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(todotable[index]['city']),
-                        subtitle: Text(todotable[index]['name']),
+                    itemBuilder: ((context, index) {
+                      final todo = todotable[index];
+                      return Column(
+                        children: [
+                          ListTile(
+                            title: Text(todo['name']),
+                            subtitle: Text(todo['city']),
+                          ),
+                          const Divider(),
+                        ],
                       );
-                    },
+                    }),
                   ),
-                ),
-              ],
-            );
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddCityDialog(context);
-        },
-        child: const Icon(Icons.add),
+                );
+              },
+            ),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              _showAddCityDialog(context);
+            },
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }

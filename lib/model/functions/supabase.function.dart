@@ -3,8 +3,13 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseFunction {
+
+
+  //get Countries
   Future<List<Map<String, dynamic>>> getCountries() async {
-    final response = await Supabase.instance.client.from('countries').select();
+    final response = await Supabase.instance.client.from('countries')
+        .select()
+        ;
     if (response.error != null) {
       print('Error fetching countries: ${response.error!.message}');
       return [];
@@ -12,6 +17,7 @@ class SupabaseFunction {
     return response.data as List<Map<String, dynamic>>;
   }
 
+//add City
   Future<List<Map<String, dynamic>>> addCity(String city, String name) async {
     final response = await Supabase.instance.client.from('countries').insert(
       [

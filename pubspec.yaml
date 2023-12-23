@@ -37,6 +37,7 @@ dependencies:
   supabase_flutter: ^1.10.25
   dotenv: ^4.2.0
   flutter_dotenv: ^5.1.0
+  fluttertoast: ^8.2.4
 
 dev_dependencies:
   flutter_test:
