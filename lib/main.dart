@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'TODO App',
+      title: 'TODO App Supabase',
       home: HomePage(),
     );
   }
