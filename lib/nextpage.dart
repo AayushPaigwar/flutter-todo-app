@@ -3,7 +3,7 @@ import 'package:supa_base/model/functions/supabase.function.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NextPage extends StatelessWidget {
-  //Add City
+  //Add City function
   final _futureadd = SupabaseFunction();
 
   //get Countries Data to Screen
