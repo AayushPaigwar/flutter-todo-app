@@ -33,22 +33,28 @@ class SupabaseFunction {
   }
 
   //fetch city
-  Future<void> fetchData() async {
+
+  Future<List<Map<String, dynamic>>> fetchData() async {
     final response = await Supabase.instance.client.from('countries').select();
-    if (response.error != null) {
-      print('Error fetching countries: ${response.error!.message}');
-      return;
+
+    if (response is! List) {
+      print('Error fetching countries: Unexpected response format');
+      return [];
     }
-    print('Countries: ${response.data}');
+    final List<dynamic> responseData = response;
+
+    /* To fix - error: type 'List<dynamic>' is not a subtype of type 'List<Map<String, dynamic>>' in type cast */
+
+    // Convert dynamic list to List<Map<String, dynamic>>
+    final List<Map<String, dynamic>> resultList =
+        List<Map<String, dynamic>>.from(responseData);
+
+    return resultList;
   }
 
-  //Update Data
-  // updateData(String title, String desc) async {
-  //   await Supabase.instance.client.from('notes').upsert(
-  //     {'title': title, 'description': desc},
-  //   );
-  // }
+// error: type 'List<dynamic>' is not a subtype of type 'List<Map<String, dynamic>>' in type cast
 
+  //Update Data
   updateData(int id, String city, String name) async {
     await Supabase.instance.client.from('countries').upsert(
       {'id': id, 'city': city, 'name': name},

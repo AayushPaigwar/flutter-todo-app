@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class NextPage extends StatelessWidget {
   //Add City function
   final _futureadd = SupabaseFunction();
-
+  
   //get Countries Data to Screen
   final _future = Supabase.instance.client
       .from('countries')
@@ -94,20 +94,17 @@ class NextPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cities'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await _futureadd.fetchData();
-            },
-            icon: const Icon(Icons.refresh),
-          ),
-        ],
+        centerTitle: true,
+        
       ),
       body: Column(
         children: [
           Expanded(
-            child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: _future,
+            child: StreamBuilder<List<Map<String, dynamic>>>(
+              stream: Supabase.instance.client
+                  .from('countries')
+                  .stream(primaryKey: ['id']),
+              // future: _future,
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
@@ -155,7 +152,7 @@ class NextPage extends StatelessWidget {
                               subtitle: Text(todo['city']),
                               trailing: IconButton(
                                 onPressed: () async {
-                                  _showUpdateDialog(context);
+                                  _showUpdateDialog(context, todo);
                                 },
                                 icon: const Icon(Icons.edit),
                               ),
@@ -185,13 +182,14 @@ class NextPage extends StatelessWidget {
   }
 }
 
-void _showUpdateDialog(ctx) {
+void _showUpdateDialog(BuildContext ctx, Map<String, dynamic> todo) {
+  TextEditingController cityController =
+      TextEditingController(text: todo['name']);
+  TextEditingController nameController =
+      TextEditingController(text: todo['city']);
   showDialog(
     context: ctx,
     builder: (BuildContext context) {
-      TextEditingController cityController = TextEditingController();
-      TextEditingController nameController = TextEditingController();
-
       return AlertDialog(
         title: const Text('Update City'),
         content: SizedBox(
@@ -221,8 +219,11 @@ void _showUpdateDialog(ctx) {
             onPressed: () {
               if (cityController.text.isNotEmpty &&
                   nameController.text.isNotEmpty) {
-                // _futureadd.addCity(cityController.text, nameController.text);
+                SupabaseFunction().updateData(
+                    todo['id'], nameController.text, cityController.text);
+
                 Navigator.of(context).pop();
+                SupabaseFunction().fetchData();
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

@@ -15,89 +15,28 @@ Future<void> main() async {
     url: dotenv.get('SUPABASE_URL'),
     anonKey: dotenv.get('SUPABASE_KEY'),
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
+  bool isDark = true;
+  ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: Colors.amber,
+  );
+
+  ThemeData lightTheme =
+      ThemeData(brightness: Brightness.light, primaryColor: Colors.blue);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: isDark == true ? darkTheme : lightTheme,
+      darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
-      title: 'TODO App Supabase',
       home: NextPage(),
     );
   }
 }
-
-// class HomePage extends StatefulWidget {
-//   const HomePage({super.key});
-
-//   @override
-//   State<HomePage> createState() => _HomePageState();
-// }
-
-// class _HomePageState extends State<HomePage> {
-//   final _future = Supabase.instance.client
-//       .from('countries')
-//       .select<List<Map<String, dynamic>>>();
-//   // final _future = SupabaseFunction();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: FutureBuilder<List<Map<String, dynamic>>>(
-//         future: _future,
-//         builder: (context, snapshot) {
-//           if (!snapshot.hasData) {
-//             return const Center(child: CircularProgressIndicator());
-//           }
-//           final todotable = snapshot.data!;
-//           return Column(
-//             children: [
-//               Expanded(
-//                 child: Container(
-//                   padding: const EdgeInsets.all(10),
-//                   margin: const EdgeInsets.all(10),
-//                   height: MediaQuery.of(context).size.height * 0.1,
-//                   decoration: const BoxDecoration(
-//                     color: Colors.white60,
-//                     // shape: BoxShape.rectangle,
-//                     borderRadius: BorderRadius.all(
-//                       Radius.circular(10),
-//                     ),
-//                   ),
-//                   child: ListView.builder(
-//                     itemCount: todotable.length,
-//                     itemBuilder: ((context, index) {
-//                       final todo = todotable[index];
-//                       return Column(
-//                         children: [
-//                           ListTile(
-//                             title: Text(todo['name']),
-//                             // subtitle: Text(todo['capital']),
-//                           ),
-//                           const Divider(),
-//                         ],
-//                       );
-//                     }),
-//                   ),
-//                 ),
-//               ),
-//               ElevatedButton(
-//                 onPressed: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => NextPage()),
-//                   );
-//                 },
-//                 child: const Text('Next Page'),
-//               )
-//             ],
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
