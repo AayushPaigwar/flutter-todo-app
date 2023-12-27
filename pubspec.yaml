@@ -38,6 +38,8 @@ dependencies:
   dotenv: ^4.2.0
   flutter_dotenv: ^5.1.0
   fluttertoast: ^8.2.4
+  flutter_slidable: ^3.0.1
+  enefty_icons: ^1.0.7
 
 dev_dependencies:
   flutter_test:

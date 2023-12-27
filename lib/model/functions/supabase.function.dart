@@ -3,36 +3,59 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseFunction {
+  //add City
+  Future<List<Map<String, dynamic>>> addCity(String city, String name) async {
+    try {
+      final response = await Supabase.instance.client.from('countries').insert(
+        [
+          {'city': city, 'name': name},
+        ],
+      ).select();
 
+      if (response is List && response.isNotEmpty) {
+        print('Response: $response');
+        return response.cast<Map<String, dynamic>>();
+      } else {
+        print('Unexpected response: $response');
+        return [];
+      }
+    } catch (e) {
+      print('Error adding city: $e');
+      return [];
+    }
+  }
 
-  //get Countries
-  Future<List<Map<String, dynamic>>> getCountries() async {
-    final response = await Supabase.instance.client.from('countries')
-        .select()
-        ;
+  //Delete City
+  deleteData(int id) async {
+    await Supabase.instance.client.from('countries').delete().match(
+      {'id': id},
+    );
+  }
+
+  //fetch city
+  Future<void> fetchData() async {
+    final response = await Supabase.instance.client.from('countries').select();
     if (response.error != null) {
       print('Error fetching countries: ${response.error!.message}');
-      return [];
+      return;
     }
-    return response.data as List<Map<String, dynamic>>;
+    print('Countries: ${response.data}');
   }
 
-//add City
-  Future<List<Map<String, dynamic>>> addCity(String city, String name) async {
-    final response = await Supabase.instance.client.from('countries').insert(
-      [
-        {'city': city, 'name': name},
-      ],
-    ).select();
-    if (response.error != null) {
-      print('Error adding city: ${response.error!.message}');
-      return [];
-    }
-    return response.data as List<Map<String, dynamic>>;
+  //Update Data
+  // updateData(String title, String desc) async {
+  //   await Supabase.instance.client.from('notes').upsert(
+  //     {'title': title, 'description': desc},
+  //   );
+  // }
+
+  updateData(int id, String city, String name) async {
+    await Supabase.instance.client.from('countries').upsert(
+      {'id': id, 'city': city, 'name': name},
+    );
   }
-}
 
 // Error: NoSuchMethodError: Class 'List <dynamic>' has no instance getter 'error'.
 // Receiver: Instance(length:27) of '_GrowableList'
 // Tried calling: error
-
+}
