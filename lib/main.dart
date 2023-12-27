@@ -15,26 +15,18 @@ Future<void> main() async {
     url: dotenv.get('SUPABASE_URL'),
     anonKey: dotenv.get('SUPABASE_KEY'),
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
-  bool isDark = true;
-  ThemeData darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    primaryColor: Colors.amber,
-  );
-
-  ThemeData lightTheme =
-      ThemeData(brightness: Brightness.light, primaryColor: Colors.blue);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: isDark == true ? darkTheme : lightTheme,
-      darkTheme: darkTheme,
+      theme: ThemeData.dark(),
+      themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       home: NextPage(),
     );
