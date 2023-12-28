@@ -7,7 +7,7 @@ class SupabaseFunction {
   //add City
   Future<List<Map<String, dynamic>>> addCity(String city, String name) async {
     try {
-      final response = await Supabase.instance.client.from('countries').insert(
+      final response = await Supabase.instance.client.from('todo-list').insert(
         [
           {'city': city, 'name': name},
         ],
@@ -28,7 +28,7 @@ class SupabaseFunction {
 
   //Delete City
   deleteData(int id) async {
-    await Supabase.instance.client.from('countries').delete().match(
+    await Supabase.instance.client.from('todo-list').delete().match(
       {'id': id},
     );
   }
@@ -36,10 +36,10 @@ class SupabaseFunction {
   //fetch city
 
   Future<List<Map<String, dynamic>>> fetchData() async {
-    final response = await Supabase.instance.client.from('countries').select();
+    final response = await Supabase.instance.client.from('todo-list').select();
 
     if (response is! List) {
-      print('Error fetching countries: Unexpected response format');
+      print('Error fetching todo-list: Unexpected response format');
       return [];
     }
     final List<dynamic> responseData = response;
@@ -59,7 +59,7 @@ class SupabaseFunction {
 
   //Update Data
   updateData(int id, String city, String name) async {
-    await Supabase.instance.client.from('countries').upsert(
+    await Supabase.instance.client.from('todo-list').upsert(
       {'id': id, 'city': city, 'name': name},
     );
   }
@@ -75,7 +75,7 @@ void showUpdateDialog(BuildContext ctx, Map<String, dynamic> todo) {
     context: ctx,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Update City'),
+        title: const Text('Update Task'),
         content: SizedBox(
           height: MediaQuery.of(context).size.height * 0.2,
           width: MediaQuery.of(context).size.width * 0.8,
@@ -83,11 +83,12 @@ void showUpdateDialog(BuildContext ctx, Map<String, dynamic> todo) {
             children: [
               TextField(
                 controller: cityController,
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Task Title'),
               ),
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'City Name'),
+                decoration:
+                    const InputDecoration(labelText: 'Task Description'),
               ),
             ],
           ),
@@ -153,7 +154,7 @@ void showAddCityDialog(BuildContext context) {
       TextEditingController cityController = TextEditingController();
 
       return AlertDialog(
-        title: const Text('Add City'),
+        title: const Text('Add Task'),
         content: SizedBox(
           height: MediaQuery.of(context).size.height * 0.2,
           width: MediaQuery.of(context).size.width * 0.8,
@@ -161,11 +162,12 @@ void showAddCityDialog(BuildContext context) {
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(labelText: 'Task Title'),
               ),
               TextField(
                 controller: cityController,
-                decoration: const InputDecoration(labelText: 'City Name'),
+                decoration:
+                    const InputDecoration(labelText: 'Task Description'),
               ),
             ],
           ),

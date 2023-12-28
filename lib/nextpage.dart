@@ -8,9 +8,9 @@ class NextPage extends StatelessWidget {
   //Add City function
   final _futureadd = SupabaseFunction();
 
-  //get Countries Data to Screen
+  //get todo-list Data to Screen
   final _future = Supabase.instance.client
-      .from('countries')
+      .from('todo-list')
       .select<List<Map<String, dynamic>>>();
 
   NextPage({super.key});
@@ -19,7 +19,7 @@ class NextPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cities'),
+        title: const Text('To-do List'),
         centerTitle: true,
       ),
       body: Column(
@@ -27,7 +27,7 @@ class NextPage extends StatelessWidget {
           Expanded(
             child: StreamBuilder<List<Map<String, dynamic>>>(
               stream: Supabase.instance.client
-                  .from('countries')
+                  .from('todo-list')
                   .stream(primaryKey: ['id']),
               // future: _future,
               builder: (context, snapshot) {
