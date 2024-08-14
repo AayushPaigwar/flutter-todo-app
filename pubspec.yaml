@@ -1,4 +1,4 @@
-name: supa_base
+name: supabase_todo
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -33,13 +33,12 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  supabase_flutter: ^1.10.25
+
   dotenv: ^4.2.0
   flutter_dotenv: ^5.1.0
-  fluttertoast: ^8.2.4
   flutter_slidable: ^3.0.1
   enefty_icons: ^1.0.7
+  supabase_flutter: ^2.5.11
 
 dev_dependencies:
   flutter_test:

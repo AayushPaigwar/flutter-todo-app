@@ -2,7 +2,7 @@
 <uses-permission android:name="android.permission.INTERNET" />
     <application
         
-        android:label="supa_base"
+        android:label="supabase_todo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

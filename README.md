@@ -1,4 +1,4 @@
-# supa_base
+# supabase_todo
 
 A new Flutter project.
 
