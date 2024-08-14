@@ -36,8 +36,8 @@ class SupabaseFunction {
   // update data | Update
   static Future<void> updateData(int id, String email, String name) async {
     await Supabase.instance.client.from('todo-list').update({
-      'email': email,
       'name': name,
+      'email': email,
     }).eq('id', id);
   }
 
